@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mayar Café — كافيه ميار</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Tajawal:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ivory:    #F5ECD8; 
+      --cream:    #DCC4A2; 
+      --sand:     #D4B896; 
+      --gold:     #B8905A; 
+      --gold-lt:  #B8703C; 
+      --espresso: #7A5535; 
+      --mocha:    #70542f; 
+      --warm-dk:  #322217; 
+      --smoke:    #1E1E1E; 
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--espresso); color: var(--ivory); font-family: 'Cormorant Garamond', Georgia, serif; overflow-x: hidden; }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; width: 100%; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.4rem 3.5rem; background: linear-gradient(to bottom, rgba(90,61,46,.95) 0%, transparent 100%); transition: background .4s, padding .4s; }
+    nav.scrolled { background: rgba(55, 35, 25, 0.97); padding: 1rem 3.5rem; backdrop-filter: blur(10px); }
+    .nav-logo { font-family: 'Cinzel', serif; font-size: 1.25rem; letter-spacing: .18em; color: var(--gold-lt); text-decoration: none; }
+    .nav-logo span { font-family: 'Tajawal', sans-serif; font-size: 1rem; color: var(--sand); margin-left: .5rem; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { font-family: 'Cinzel', serif; font-size: .72rem; letter-spacing: .2em; color: var(--sand); text-decoration: none; transition: color .3s; }
+    .nav-links a:hover { color: var(--gold-lt); }
+
+    /* HERO */
+    #hero { position: relative; height: 100vh; min-height: 680px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 60% 40%, rgb(201, 169, 122) 0%, transparent 70%), radial-gradient(ellipse 70% 60% at 60% 40%, rgb(75, 52, 30) 0%, transparent 70%), linear-gradient(160deg, #EDE0CE 0%, #C9A97A 50%, #7A5535 100%); }
+    .hero-ring { position: absolute; width: 560px; height: 560px; border-radius: 50%; border: 1px solid rgba(196,154,69,.35); top: 50%; left: 50%; transform: translate(-50%, -50%); animation: ringPulse 6s ease-in-out infinite; }
+    .hero-ring::after { content: ''; position: absolute; inset: 28px; border-radius: 50%; border: 1px solid rgba(196,154,69,.25); }
+    @keyframes ringPulse { 0%,100% { transform: translate(-50%,-50%) scale(1); opacity:.6; } 50% { transform: translate(-50%,-50%) scale(1.03); opacity:1; } }
+    .grain-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 1; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E"); opacity:.4; }
+    .hero-content { position: relative; z-index: 2; text-align: center; padding: 0 2rem; animation: heroFadeUp .9s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes heroFadeUp { from { opacity:0; transform: translateY(32px); } to { opacity:1; transform: translateY(0); } }
+    .hero-eyebrow { font-family: 'Cinzel', serif; font-size: .7rem; letter-spacing: .45em; color: #a36013; margin-bottom: 1.6rem; display: flex; align-items: center; justify-content: center; gap: 1rem; }
+    .hero-eyebrow::before, .hero-eyebrow::after { content: ''; display: block; width: 48px; height: 1px; background: linear-gradient(to right, transparent, #a36013); }
+    .hero-eyebrow::after { background: linear-gradient(to left, transparent, #a36013); }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(4rem, 9vw, 8rem); font-weight: 300; line-height: .92; color: var(--ivory); letter-spacing: -.01em; }
+    .hero-title em { font-style: italic; color: var(--gold-lt); }
+    .hero-arabic { font-family: 'Tajawal', sans-serif; font-size: clamp(1.4rem, 3vw, 2.2rem); font-weight: 300; color: var(--sand); margin-top: .7rem; letter-spacing: .05em; }
+    .hero-tagline { margin-top: 2rem; font-size: 1.1rem; font-style: italic; color: var(--sand); font-weight: 300; }
+    .hero-cta-row { margin-top: 3rem; display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { display: inline-block; padding: .9rem 2.8rem; background: var(--gold); color: var(--espresso); font-family: 'Cinzel', serif; font-size: .72rem; letter-spacing: .25em; text-decoration: none; transition: background .3s, transform .2s; }
+    .btn-primary:hover { background: var(--gold-lt); transform: translateY(-2px); }
+    .btn-ghost { display: inline-block; padding: .9rem 2.8rem; border: 1px solid rgba(196,154,69,.5); color: var(--gold-lt); font-family: 'Cinzel', serif; font-size: .72rem; letter-spacing: .25em; text-decoration: none; transition: border-color .3s, color .3s, transform .2s; }
+    .btn-ghost:hover { border-color: var(--gold-lt); color: var(--ivory); transform: translateY(-2px); }
+    .hero-scroll { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: .5rem; font-family: 'Cinzel', serif; font-size: .6rem; letter-spacing: .3em; color: var(--sand); animation: bounceDown 2.5s ease-in-out infinite; }
+    .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gold), transparent); }
+    @keyframes bounceDown { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+    /* DIVIDER */
+    .gold-divider { display: flex; align-items: center; justify-content: center; gap: 1.2rem; margin: 0 auto; padding: 0 3rem; }
+    .gold-divider::before, .gold-divider::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold), transparent); }
+    .gold-diamond { width: 8px; height: 8px; background: var(--gold); transform: rotate(45deg); flex-shrink: 0; }
+
+    /* SECTION COMMON */
+    section { padding: 7rem 5%; }
+    .section-label { font-family: 'Cinzel', serif; font-size: .65rem; letter-spacing: .4em; color: var(--gold); margin-bottom: 1rem; text-align: center; }
+    .section-title { font-size: clamp(2.2rem, 4vw, 3.8rem); font-weight: 300; text-align: center; line-height: 1.1; color: var(--ivory); }
+    .section-title em { font-style: italic; color: var(--gold-lt); }
+    .section-sub { text-align: center; font-size: 1.05rem; color: var(--sand); max-width: 560px; margin: 1.2rem auto 0; font-style: italic; line-height: 1.7; }
+
+    /* ABOUT */
+    #about { background: var(--warm-dk); }
+    .about-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; margin-top: 4rem; }
+    .about-visual { position: relative; }
+    .about-frame { width: 100%; aspect-ratio: 4/5; background: linear-gradient(135deg, var(--mocha) 0%, var(--espresso) 100%); position: relative; overflow: hidden; }
+    .coffee-art { position: absolute; inset: 0; background: radial-gradient(circle 60px at 50% 45%, rgba(184,151,58,.25) 0%, transparent 70%), radial-gradient(ellipse 120px 80px at 50% 45%, rgba(58,43,20,.8) 0%, transparent 80%); }
+    .about-accent-box { position: absolute; bottom: -1.5rem; right: -1.5rem; width: 130px; height: 130px; border: 1px solid rgba(184,151,58,.4); display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--espresso); }
+    .about-accent-box .num { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; color: var(--gold-lt); line-height: 1; }
+    .about-accent-box .label { font-family: 'Cinzel', serif; font-size: .6rem; letter-spacing: .2em; color: var(--sand); }
+    .about-text h3 { font-size: clamp(1.6rem, 2.5vw, 2.4rem); font-weight: 300; line-height: 1.2; color: var(--ivory); margin-bottom: 1.5rem; }
+    .about-text h3 em { font-style: italic; color: var(--gold-lt); }
+    .about-text p { font-size: 1.05rem; color: var(--sand); line-height: 1.9; margin-bottom: 1.2rem; }
+    .about-stats { display: flex; gap: 2rem; margin-top: 2.5rem; }
+    .stat { text-align: center; }
+    .stat .n { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 300; color: var(--gold-lt); line-height: 1; }
+    .stat .l { font-family: 'Cinzel', serif; font-size: .6rem; letter-spacing: .2em; color: var(--sand); margin-top: .3rem; }
+    .stat-sep { width: 1px; background: rgba(184,151,58,.25); }
+
+    /* MENU */
+    #menu { background: var(--espresso); }
+    .menu-tabs { display: flex; justify-content: center; gap: 0; margin: 3rem auto 3.5rem; border-bottom: 1px solid rgba(184,151,58,.2); flex-wrap: wrap; }
+    .tab { font-family: 'Cinzel', serif; font-size: .7rem; letter-spacing: .2em; color: var(--sand); padding: .8rem 1.6rem; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color .3s, border-color .3s; background: none; border-top: none; border-left: none; border-right: none; }
+    .tab.active { color: var(--gold-lt); border-bottom-color: var(--gold); }
+    .tab:hover:not(.active) { color: var(--ivory); }
+    .menu-panel { display: none; }
+    .menu-panel.active { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5px; }
+    .menu-item { background: var(--warm-dk); display: flex; flex-direction: column; transition: background .3s; overflow: hidden; }
+    .menu-item:hover { background: #2e2110; }
+    .menu-item-img { width: 100%; aspect-ratio: 4/3; overflow: hidden; background: var(--espresso); position: relative; flex-shrink: 0; }
+    .menu-item-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s ease; }
+    .menu-item:hover .menu-item-img img { transform: scale(1.04); }
+    .menu-item-img .img-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; color: rgba(184,151,58,.3); font-family: 'Cinzel', serif; font-size: .6rem; letter-spacing: .2em; }
+    .menu-item-img .img-placeholder svg { width: 36px; height: 36px; opacity: .35; }
+    .menu-item-body { padding: 1.5rem 1.8rem; display: flex; justify-content: space-between; align-items: flex-start; flex: 1; }
+    .item-info h4 { font-size: 1.05rem; font-weight: 400; color: var(--ivory); }
+    .item-info p { font-size: .88rem; font-style: italic; color: var(--sand); margin-top: .3rem; line-height: 1.5; }
+    .item-price { font-family: 'Cinzel', serif; font-size: .8rem; letter-spacing: .1em; color: var(--gold); white-space: nowrap; margin-left: 1rem; margin-top: .15rem; flex-shrink: 0; }
+
+    /* EXPERIENCE */
+    #experience { background: var(--warm-dk); text-align: center; }
+    .exp-grid { max-width: 1000px; margin: 4rem auto 0; display: grid; grid-template-columns: repeat(3,1fr); gap: 3rem; }
+    .exp-card { padding: 2.5rem 1.8rem; border: 1px solid rgba(184,151,58,.18); transition: border-color .3s, transform .3s; }
+    .exp-card:hover { border-color: rgba(184,151,58,.5); transform: translateY(-4px); }
+    .exp-icon { font-size: 2.2rem; margin-bottom: 1.2rem; }
+    .exp-card h3 { font-family: 'Cinzel', serif; font-size: .9rem; letter-spacing: .12em; color: var(--gold-lt); margin-bottom: .8rem; }
+    .exp-card p { font-size: .98rem; color: var(--sand); line-height: 1.8; font-style: italic; }
+
+    /* REVIEWS */
+    #reviews { background: var(--espresso); }
+    .review-track { max-width: 1100px; margin: 4rem auto 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 1.5px; }
+    .review-card { padding: 2.5rem; background: var(--warm-dk); }
+    .review-stars { color: var(--gold); font-size: .9rem; letter-spacing: .1em; margin-bottom: 1rem; }
+    .review-text { font-size: 1.05rem; font-style: italic; color: var(--sand); line-height: 1.85; margin-bottom: 1.5rem; }
+    .review-author { font-family: 'Cinzel', serif; font-size: .68rem; letter-spacing: .18em; color: var(--gold-lt); }
+    .review-date { font-size: .82rem; color: rgba(201,185,154,.5); margin-top: .2rem; }
+    .rating-badge { max-width: 340px; margin: 3.5rem auto 0; padding: 2rem; border: 1px solid rgba(184,151,58,.3); text-align: center; }
+    .rating-big { font-family: 'Cormorant Garamond', serif; font-size: 5rem; font-weight: 300; color: var(--gold-lt); line-height: 1; }
+    .rating-stars { color: var(--gold); font-size: 1.1rem; margin: .5rem 0; }
+    .rating-count { font-family: 'Cinzel', serif; font-size: .68rem; letter-spacing: .2em; color: var(--sand); }
+
+    /* VISIT */
+    #visit { background: var(--warm-dk); }
+    .visit-inner { max-width: 1000px; margin: 4rem auto 0; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+    .info-block h3 { font-family: 'Cinzel', serif; font-size: .8rem; letter-spacing: .25em; color: var(--gold); margin-bottom: 1.5rem; }
+    .info-block p { font-size: 1rem; color: var(--sand); line-height: 1.8; }
+    .info-block a { color: var(--gold-lt); text-decoration: none; }
+    .hours-table { width: 100%; border-collapse: collapse; }
+    .hours-table td { padding: .6rem 0; font-size: .97rem; color: var(--sand); border-bottom: 1px solid rgba(184,151,58,.1); }
+    .hours-table td:last-child { text-align: right; color: var(--ivory); }
+
+    /* CTA */
+    #cta { background: linear-gradient(135deg, #2A1E0E 0%, #1C1208 100%); text-align: center; padding: 8rem 5%; position: relative; overflow: hidden; }
+    #cta::before { content: ''; position: absolute; width: 700px; height: 700px; border-radius: 50%; border: 1px solid rgba(184,151,58,.1); top: 50%; left: 50%; transform: translate(-50%,-50%); }
+    #cta::after { content: ''; position: absolute; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(184,151,58,.08); top: 50%; left: 50%; transform: translate(-50%,-50%); }
+    .cta-inner { position: relative; z-index: 1; }
+    .cta-title { font-size: clamp(2.4rem, 5vw, 4.5rem); font-weight: 300; color: var(--ivory); line-height: 1.1; margin-bottom: 1rem; }
+    .cta-title em { font-style: italic; color: var(--gold-lt); }
+    .cta-sub { font-size: 1.1rem; font-style: italic; color: var(--sand); margin-bottom: 2.5rem; }
+
+    /* FOOTER */
+    footer { background: #110C05; padding: 3.5rem 5%; }
+    .footer-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 2rem; margin-bottom: 2.5rem; padding-bottom: 2.5rem; border-bottom: 1px solid rgba(184,151,58,.15); }
+    .footer-logo { font-family: 'Cinzel', serif; font-size: 1.1rem; letter-spacing: .18em; color: var(--gold-lt); display:flex; align-items:center; gap:.75rem; }
+    .footer-logo img { width:38px; height:38px; border-radius:50%; object-fit:cover; border:1px solid rgba(184,151,58,.3); }
+    .footer-logo span { font-family: 'Tajawal', sans-serif; font-size: .95rem; color: var(--sand); margin-left: .4rem; }
+    .footer-links { display: flex; gap: 2rem; align-items: center; flex-wrap: wrap; }
+    .footer-links a { font-family: 'Cinzel', serif; font-size: .62rem; letter-spacing: .18em; color: var(--sand); text-decoration: none; transition: color .3s; }
+    .footer-links a:hover { color: var(--gold-lt); }
+    .footer-social { display: flex; gap: 1.2rem; align-items: center; }
+    .footer-social a { display: flex; align-items: center; gap: .5rem; color: var(--sand); text-decoration: none; font-family: 'Cinzel', serif; font-size: .62rem; letter-spacing: .15em; transition: color .3s; }
+    .footer-social a:hover { color: var(--gold-lt); }
+    .footer-social svg { width: 20px; height: 20px; fill: currentColor; flex-shrink: 0; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .footer-copy { font-size: .85rem; color: rgba(201,185,154,.4); }
+
+    /* EXPAND */
+    #expandReviews { transition: opacity .2s; }
+    #expandReviews:hover { opacity: .8; }
+    .expand-circle { width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: var(--gold); transition: background .3s, color .3s; flex-shrink: 0; }
+    #expandReviews:hover .expand-circle { background: var(--gold); color: var(--espresso); }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1); }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-d1 { transition-delay: .1s; }
+    .reveal-d2 { transition-delay: .2s; }
+    .reveal-d3 { transition-delay: .3s; }
+    .reveal-d4 { transition-delay: .4s; }
+
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 2rem; }
+      nav.scrolled { padding: .8rem 2rem; }
+      .nav-links { display: none; }
+      .about-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .about-frame { aspect-ratio: 16/9; }
+      .exp-grid { grid-template-columns: 1fr; max-width: 440px; }
+      .visit-inner { grid-template-columns: 1fr; }
+      .menu-panel.active { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      section { padding: 5rem 5%; }
+      .footer-top { flex-direction: column; gap: 1.5rem; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+story
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#hero" class="nav-logo" style="display:flex;align-items:center;gap:.75rem;"><img src="" alt="Mayar Café" style="height:48px;width:48px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1px solid rgba(184,151,58,.25);">MAYAR <span>ميار</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">Our Story</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#visit">Visit Us</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-ring"></div>
+  <div class="grain-overlay"></div>
+  <div class="hero-content">
+    <div style="margin-bottom:1.8rem;"><img src="" alt="Mayar Café" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:1px solid rgba(184,151,58,.4);box-shadow:0 0 0 8px rgba(184,151,58,.08);"></div>
+    <div class="hero-eyebrow">Umm Al Quwain</div>
+    <h1 class="hero-title">Mayar<br><em>Café</em></h1>
+    <p class="hero-arabic">كافيه ميار</p>
+    <p class="hero-tagline">Where every cup tells a story</p>
+    <div class="hero-cta-row">
+      <a href="#menu" class="btn-primary">Explore Menu</a>
+      <a href="#visit" class="btn-ghost">Find Us</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>SCROLL</span>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div style="background:var(--warm-dk); padding: 2.5rem 0;">
+  <div class="gold-divider"><div class="gold-diamond"></div></div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-label reveal">Our Story</p>
+  <h2 class="section-title reveal reveal-d1">A sanctuary of <em>warmth</em><br>in the heart of the Emirates</h2>
+  <p class="section-sub reveal reveal-d2">Born from a passion for exceptional coffee and genuine hospitality, Mayar Café is a place where moments become memories.</p>
+  <div class="about-inner">
+    <div class="about-visual reveal">
+      <div class="about-frame">
+        <div class="coffee-art"></div>
+        <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;opacity:.35">
+          <circle cx="150" cy="180" r="80" fill="none" stroke="#B8973A" stroke-width="1"/>
+          <circle cx="150" cy="180" r="55" fill="none" stroke="#B8973A" stroke-width=".5" stroke-dasharray="4 6"/>
+          <circle cx="150" cy="180" r="30" fill="rgba(184,151,58,.15)"/>
+          <path d="M 150 100 Q 200 140 150 180 Q 100 220 150 260" fill="none" stroke="#B8973A" stroke-width=".8" opacity=".6"/>
+          <path d="M 90 150 Q 130 160 150 180 Q 170 200 210 210" fill="none" stroke="#B8973A" stroke-width=".8" opacity=".6"/>
+          <path d="M 130 80 Q 135 65 130 50" fill="none" stroke="#D4B96A" stroke-width="1.5" stroke-linecap="round" opacity=".5"><animate attributeName="d" values="M 130 80 Q 135 65 130 50;M 130 80 Q 140 65 135 50;M 130 80 Q 135 65 130 50" dur="3s" repeatCount="indefinite"/></path>
+          <path d="M 150 80 Q 155 65 150 50" fill="none" stroke="#D4B96A" stroke-width="1.5" stroke-linecap="round" opacity=".5"><animate attributeName="d" values="M 150 80 Q 155 65 150 50;M 150 80 Q 145 65 148 50;M 150 80 Q 155 65 150 50" dur="2.5s" repeatCount="indefinite"/></path>
+          <path d="M 170 80 Q 175 65 170 50" fill="none" stroke="#D4B96A" stroke-width="1.5" stroke-linecap="round" opacity=".5"><animate attributeName="d" values="M 170 80 Q 175 65 170 50;M 170 80 Q 165 65 168 50;M 170 80 Q 175 65 170 50" dur="3.5s" repeatCount="indefinite"/></path>
+        </svg>
+      </div>
+      <div class="about-accent-box"><div class="num">4.7</div><div class="label">RATING</div></div>
+    </div>
+    <div class="about-text reveal reveal-d2">
+      <h3>More than coffee —<br>a <em>feeling</em></h3>
+      <p>Nestled in the peaceful Al Salmah district of Umm Al Quwain, Mayar Café was crafted to be a refuge from the rush — a place where the aroma of fresh-brewed coffee mingles with warmth, conversation, and care.</p>
+      <p>From our signature Eggs Benedict to our meticulously crafted lattes and matchas, every item on our menu is prepared with intention. Our team — the heart of Mayar — greets every guest with a smile that feels like coming home.</p>
+      <div class="about-stats">
+        <div class="stat"><div class="n">328+</div><div class="l">REVIEWS</div></div>
+        <div class="stat-sep"></div>
+        <div class="stat"><div class="n">4.7</div><div class="l">STARS</div></div>
+        <div class="stat-sep"></div>
+        <div class="stat"><div class="n">100%</div><div class="l">HALAL</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section id="menu">
+  <p class="section-label reveal">Curated for You</p>
+  <h2 class="section-title reveal reveal-d1">The <em>Menu</em></h2>
+  <p class="section-sub reveal reveal-d2">Honest ingredients, crafted with love — from morning rituals to golden-hour indulgences.</p>
+
+  <div class="menu-tabs reveal reveal-d2">
+    <button class="tab active" data-tab="breakfast">Breakfast</button>
+    <button class="tab" data-tab="sandwiches">Sandwiches</button>
+    <button class="tab" data-tab="mains">Mains</button>
+    <button class="tab" data-tab="salads">Salads</button>
+    <button class="tab" data-tab="coffee">Coffee</button>
+    <button class="tab" data-tab="matcha">Matcha</button>
+    <button class="tab" data-tab="blends">Blends</button>
+    <button class="tab" data-tab="drinks">Drinks</button>
+    <button class="tab" data-tab="sweets">Sweets</button>
+    <button class="tab" data-tab="croissants">Croissants</button>
+  </div>
+
+  <!-- BREAKFAST -->
+  <div class="menu-panel active" id="tab-breakfast">
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="eggs-benedict.jpg" alt="Eggs Benedict" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Eggs Benedict</h4><p>Turkey, cheese, avocado, side salad</p></div><div class="item-price">AED 27</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="mushroom-omelette.jpg" alt="Mushroom Omelette & Cheese" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Mushroom Omelette & Cheese</h4><p>Mushroom, mozzarella and parmesan cheese</p></div><div class="item-price">AED 27</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="french-toast.jpg" alt="French Toast" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>French Toast</h4><p>Sweet toast, sliced fruits, vanilla ice cream</p></div><div class="item-price">AED 33</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="scrambled-egg-sourdough.jpg" alt="Scrambled Egg on Sourdough" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Scrambled Egg on Sourdough</h4><p>Feta cheese, side salad</p></div><div class="item-price">AED 29</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="egg-shakshouka.jpg" alt="Egg Shakshouka" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Egg Shakshouka</h4><p>Potato, cheese, bread basket</p></div><div class="item-price">AED 34</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="peanut-butter-acai-bowl.jpg" alt="Peanut Butter Acai Bowl" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Peanut Butter Acai Bowl</h4><p>Acai, peanut butter, granola, banana, strawberries, blueberries and raspberries</p></div><div class="item-price">AED 35</div></div>
+    </div>
+  </div>
+
+  <!-- SANDWICHES -->
+  <div class="menu-panel" id="tab-sandwiches">
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="chicken-quesadilla.jpg" alt="Chicken Quesadilla" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Chicken Quesadilla</h4><p>Chicken, vegetables, mozzarella cheese and side salad</p></div><div class="item-price">AED 43</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="turkey-supreme.jpg" alt="Turkey Supreme" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Turkey Supreme</h4><p>Turkey sandwich — rich and satisfying for any time of day</p></div><div class="item-price">AED 25</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="morning-scramble.jpg" alt="Morning Scramble" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Morning Scramble</h4><p>Soft scrambled eggs sandwich, the perfect start to your morning</p></div><div class="item-price">AED 25</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="turkey-bagel.jpg" alt="Turkey Bagel with Cheese" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Turkey Bagel with Cheese</h4><p>Turkey, egg, cheese, vegetables</p></div><div class="item-price">AED 35</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="fajita-croissant.jpg" alt="Fajita Croissant" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Fajita Croissant</h4><p>Chicken, mozzarella cheese, corn, side salad</p></div><div class="item-price">AED 39</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="halloumi-avocado-sandwich.jpg" alt="Halloumi Avocado Sandwich" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Halloumi Avocado Sandwich</h4><p>Grilled halloumi with fresh avocado and sliced cheese, served with crispy chips</p></div><div class="item-price">AED 41</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="pesto-halloumi-sandwich.jpg" alt="Pesto Halloumi Sandwich" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Pesto Halloumi Sandwich</h4><p>Grilled halloumi with flavorful pesto and cheese, served with crispy chips</p></div><div class="item-price">AED 41</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="halloumi-three-cheese.jpg" alt="Halloumi Three Cheese Sandwich" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Halloumi Three Cheese Sandwich</h4><p>Three varieties of cheese served with crispy potato chips</p></div><div class="item-price">AED 37</div></div>
+    </div>
+  </div>
+
+  <!-- MAINS -->
+  <div class="menu-panel" id="tab-mains">
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="black-pepper-tenderloin.jpg" alt="Black Pepper Tenderloin Lollipop" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Black Pepper Tenderloin Lollipop</h4><p>Marinated beef tenderloin with side sweet potato and extra tasty sauce</p></div><div class="item-price">AED 56</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="grilled-chicken-pasta.jpg" alt="Grilled Chicken Pasta" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Grilled Chicken Pasta</h4><p>Premium grilled chicken with pasta topped with mozzarella cheese</p></div><div class="item-price">AED 54</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="chicken-ala-cream.jpg" alt="Chicken Ala Cream" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Chicken Ala Cream</h4><p>Premium chicken with cream sauce, side veg with mashed potato</p></div><div class="item-price">AED 45</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="chicken-veg-belfukhara.jpg" alt="Chicken & Veg Bel-Fukhara" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Chicken & Veg Bel-Fukhara</h4><p>Mixed vegetables with special sauce and mozzarella cheese topped with baked dough</p></div><div class="item-price">AED 55</div></div>
+    </div>
+  </div>
+
+  <!-- SALADS -->
+  <div class="menu-panel" id="tab-salads">
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="nachos-salad.jpg" alt="Nachos Salad" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Nachos Salad</h4><p>Crispy nachos with fresh toppings</p></div><div class="item-price">AED 35</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="chicken-caesar-salad.jpg" alt="Chicken Caesar Salad" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Chicken Caesar Salad</h4><p>Chicken, lettuce, tomatoes, toast, parmesan cheese, with special sauce</p></div><div class="item-price">AED 37</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="quinoa-salad.jpg" alt="Quinoa Salad" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Quinoa Salad</h4><p>Quinoa, capsicums, premium lettuce, cucumbers, tomatoes, with special sauce</p></div><div class="item-price">AED 32</div></div>
+    </div>
+  </div>
+
+  <!-- COFFEE -->
+  <div class="menu-panel" id="tab-coffee">
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="espresso.jpg" alt="Espresso" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Espresso</h4><p>Concentrated shot of strong coffee</p></div><div class="item-price">AED 14</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="americano.jpg" alt="Americano" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Americano</h4><p>Espresso diluted with hot water</p></div><div class="item-price">AED 16</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="latte.jpg" alt="Latte" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Latte</h4><p>Espresso with steamed milk and a light layer of foam</p></div><div class="item-price">Price on Selection</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="cappuccino.jpg" alt="Cappuccino" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Cappuccino</h4><p>Equal parts espresso, steamed milk, and milk foam</p></div><div class="item-price">Price on Selection</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="spanish-latte.jpg" alt="Spanish Latte" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Spanish Latte</h4><p>Sweetened latte with condensed milk and espresso</p></div><div class="item-price">Price on Selection</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="spanish-cortado.jpg" alt="Spanish Cortado" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Spanish Cortado</h4><p>A smaller, sweeter cortado with condensed milk</p></div><div class="item-price">Price on Selection</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="pistachio-latte.jpg" alt="Pistachio Latte" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Pistachio Latte</h4><p>Latte flavored with nutty pistachio syrup</p></div><div class="item-price">Price on Selection</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="saffron-latte.jpg" alt="Saffron Latte" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Saffron Latte</h4><p>Latte infused with aromatic saffron flavor</p></div><div class="item-price">Price on Selection</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="mocha.jpg" alt="Mocha" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Mocha</h4><p>Espresso with chocolate and steamed milk</p></div><div class="item-price">Price on Selection</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="flat-white.jpg" alt="Hot Flat White" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Hot Flat White</h4><p>Smooth espresso with velvety steamed milk, less foam than a cappuccino</p></div><div class="item-price">AED 21</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="hot-cortado.jpg" alt="Hot Cortado" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Hot Cortado</h4><p>Espresso cut with a small amount of warm milk</p></div><div class="item-price">AED 19</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="hot-piccolo.jpg" alt="Hot Piccolo" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Hot Piccolo</h4><p>A miniature version of a latte with a stronger espresso flavor</p></div><div class="item-price">AED 19</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="hot-chocolate.jpg" alt="Hot Chocolate" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Hot Chocolate</h4><p>Rich, warming classic</p></div><div class="item-price">Price on Selection</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="babychino.jpg" alt="Babychino" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Babychino</h4><p>Frothy steamed milk for little ones</p></div><div class="item-price">Price on Selection</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="cold-affogato.jpg" alt="Cold Affogato" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Cold Affogato</h4><p>Scoop of ice cream topped with a shot of hot espresso</p></div><div class="item-price">AED 28</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="v60.jpg" alt="V60" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>V60</h4><p>Manual pour-over coffee using the V60 dripper</p></div><div class="item-price">AED 23</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="chemex.jpg" alt="Chemex" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Chemex</h4><p>Smooth, clean coffee brewed with a Chemex</p></div><div class="item-price">AED 23</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="aeropress.jpg" alt="Aeropress" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Aeropress</h4><p>Full-bodied, rich coffee brewed using an Aeropress</p></div><div class="item-price">AED 23</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="cold-brew.jpg" alt="Cold Brew" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Cold Brew</h4><p>Coffee steeped in cold water for a smooth, chilled drink</p></div><div class="item-price">AED 23</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="special-beans-v60.jpg" alt="Special Beans V60" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Special Beans V60</h4><p>V60 brew using high-quality specialty coffee beans</p></div><div class="item-price">AED 35</div></div>
+    </div>
+  </div>
+
+  <!-- MATCHA -->
+  <div class="menu-panel" id="tab-matcha">
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="green-matcha-latte.jpg" alt="Green Matcha Latte" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Green Matcha Latte</h4><p>Latte made with premium green matcha powder</p></div><div class="item-price">Price on Selection</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="blue-matcha-latte.jpg" alt="Blue Matcha Latte" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Blue Matcha Latte</h4><p>Latte made with blue spirulina-based matcha alternative</p></div><div class="item-price">Price on Selection</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="pink-matcha-latte.jpg" alt="Pink Matcha Latte" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Pink Matcha Latte</h4><p>Matcha with milk and a light pink touch — balanced flavor and elegant color</p></div><div class="item-price">Price on Selection</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="matcha-blend.jpg" alt="Matcha Blend" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Matcha Blend</h4><p>Blended drink infused with traditional green matcha</p></div><div class="item-price">AED 26</div></div>
+    </div>
+  </div>
+
+  <!-- BLENDS -->
+  <div class="menu-panel" id="tab-blends">
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="acai-blend.jpg" alt="Acai Blend" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Acai Blend</h4><p>Smooth blended drink with acai berry flavor</p></div><div class="item-price">AED 32</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="vanilla-blend.jpg" alt="Vanilla Blend" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Vanilla Blend</h4><p>Creamy vanilla-flavored blended beverage</p></div><div class="item-price">AED 26</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="pistachio-blend.jpg" alt="Pistachio Blend" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Pistachio Blend</h4><p>Nutty pistachio-flavored blended drink</p></div><div class="item-price">AED 26</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="saffron-blend.jpg" alt="Saffron Blend" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Saffron Blend</h4><p>Fragrant saffron-flavored creamy blended drink</p></div><div class="item-price">AED 26</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="lotus-blend.jpg" alt="Lotus Blend" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Lotus Blend</h4><p>Creamy blend flavored with Lotus Biscoff</p></div><div class="item-price">AED 26</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="mayar-frappe.jpg" alt="MAYAR Frappe" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>MAYAR Frappe</h4><p>House-special frappe with Mayar blend of flavors</p></div><div class="item-price">AED 30</div></div>
+    </div>
+  </div>
+
+  <!-- DRINKS -->
+  <div class="menu-panel" id="tab-drinks">
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="orange-juice.jpg" alt="Orange Juice" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Orange Juice</h4><p>Freshly squeezed orange juice</p></div><div class="item-price">AED 15</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="green-apple-juice.jpg" alt="Green Apple Juice" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Green Apple Juice</h4><p>Green apple, lemon and ice</p></div><div class="item-price">AED 15</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="orange-carrot-juice.jpg" alt="Orange Carrot Juice" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Orange Carrot Juice</h4><p>Blend of orange and carrot juice — sweet and earthy</p></div><div class="item-price">AED 15</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="mango-smoothie.jpg" alt="Mango Smoothie" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Mango Smoothie</h4><p>Rich and tropical mango smoothie</p></div><div class="item-price">AED 29</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="banana-smoothie.jpg" alt="Banana Smoothie" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Banana Smoothie</h4><p>Creamy and naturally sweet banana smoothie</p></div><div class="item-price">AED 29</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="strawberry-smoothie.jpg" alt="Strawberry Smoothie" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Strawberry Smoothie</h4><p>Sweet and slightly tart strawberry juice or smoothie</p></div><div class="item-price">AED 29</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="raspberry-smoothie.jpg" alt="Raspberry Smoothie" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Raspberry Smoothie</h4><p>Tangy raspberry smoothie</p></div><div class="item-price">AED 29</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="classic-mojito.jpg" alt="Classic Mojito" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Classic Mojito</h4><p>Classic mint and lime mojito mocktail</p></div><div class="item-price">AED 20</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="strawberry-mojito.jpg" alt="Strawberry Mojito" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Strawberry Mojito</h4><p>Mojito with a twist of sweet strawberries.</p></div><div class="item-price">AED 20</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="raspberry-mojito.jpg" alt="Raspberry Mojito" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Raspberry Mojito</h4><p>Mojito infused with bold raspberry flavor</p></div><div class="item-price">AED 20</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="passion-fruit-mojito.jpg" alt="Passion Fruit Mojito" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Passion Fruit Mojito</h4><p>Mojito with exotic passion fruit flavor</p></div><div class="item-price">AED 20</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="blueberry-mojito.jpg" alt="Blueberry Mojito" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Blueberry Mojito</h4><p>Mojito made with blueberry flavor and mint</p></div><div class="item-price">AED 20</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="cold-brew-mojito.jpg" alt="Cold Brew Mojito" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Cold Brew Mojito</h4><p>Mojito made with cold brew coffee and mint</p></div><div class="item-price">AED 25</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="hibiscus-iced-tea.jpg" alt="Hibiscus Iced Tea" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Hibiscus Iced Tea</h4><p>Refreshing iced tea brewed with hibiscus flowers</p></div><div class="item-price">AED 26</div></div>
+    </div>
+  </div>
+
+  <!-- SWEETS -->
+  <div class="menu-panel" id="tab-sweets">
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="basbousa.jpg" alt="Basbousa" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Basbousa</h4><p>Traditional sweet semolina cake</p></div><div class="item-price">AED 104</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="elba-oqaily.jpg" alt="Elba Oqaily" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Elba Oqaily</h4><p>Kuwaiti Elba with cardamom and saffron, topped with Gars Ogaily cake and toasted sesame</p></div><div class="item-price">AED 133</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="midnight-crunch.jpg" alt="Midnight Crunch" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Midnight Crunch</h4><p>Multi-layered dessert balancing silky smoothness and addictive crunch</p></div><div class="item-price">AED 173</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="saffron-milk-cake.jpg" alt="Saffron Milk Cake" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Saffron Milk Cake</h4><p>Moist cake drenched in saffron-infused triple milk blend with velvety cream</p></div><div class="item-price">AED 127</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="chocolate-brownie.jpg" alt="Chocolate Brownie" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Chocolate Brownie</h4><p>Rich fudgy chocolate brownie with a decadent center and crisp outer</p></div><div class="item-price">AED 35</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="cheesecake-upside-down.jpg" alt="Cheesecake Upside Down" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Cheesecake Upside Down</h4><p>Inverted cheesecake — signature Mayar creation</p></div><div class="item-price">AED 35</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="red-velvet-cake.jpg" alt="Red Velvet Cake" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Red Velvet Cake</h4><p>Classic red velvet with cream cheese frosting</p></div><div class="item-price">AED 25</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="pistachio-milk-cake.jpg" alt="Pistachio Milk Cake" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Pistachio Milk Cake</h4><p>Moist milk cake flavored with pistachio</p></div><div class="item-price">AED 30</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="molten-chocolate-cake.jpg" alt="Molten Chocolate Cake" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Molten Chocolate Cake</h4><p>Warm chocolate cake with gooey molten center</p></div><div class="item-price">AED 30</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="blueberry-cheesecake.jpg" alt="Blueberry Cheesecake" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Blueberry Cheesecake</h4><p>Creamy cheesecake topped with blueberries</p></div><div class="item-price">AED 25</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="triple-chocolate.jpg" alt="Triple Chocolate" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Triple Chocolate</h4><p>Dark, milk, and white chocolate layered dessert</p></div><div class="item-price">AED 20</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="sticky-date.jpg" alt="Sticky Date" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Sticky Date</h4><p>Rich, sticky cake made with dates</p></div><div class="item-price">AED 22</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="nutella-cookie.jpg" alt="Nutella Cookie" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Nutella Cookie</h4><p>Soft cookie topped with Nutella</p></div><div class="item-price">AED 10</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="kinder-cookie.jpg" alt="Kinder Cookie" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Kinder Cookie</h4><p>Cookies filled with creamy Kinder filling</p></div><div class="item-price">AED 10</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="oreo-traffle.jpg" alt="OREO Traffle (per piece)" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>OREO Traffle (per piece)</h4><p>Oreo truffle bite-sized treat</p></div><div class="item-price">AED 5</div></div>
+    </div>
+  </div>
+
+  <!-- CROISSANTS -->
+  <div class="menu-panel" id="tab-croissants">
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="plain-croissant.jpg" alt="Plain Croissant" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Plain Croissant</h4><p>Classic buttery and flaky croissant</p></div><div class="item-price">AED 20</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="cheese-croissant.jpg" alt="Cheese Croissant" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Cheese Croissant</h4><p>Croissant filled with savory cheese</p></div><div class="item-price">AED 22</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="zaatar-croissant.jpg" alt="Zaatar Croissant" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Zaatar Croissant</h4><p>Croissant infused with Middle Eastern zaatar spice blend</p></div><div class="item-price">AED 22</div></div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-img"><img src="zaatar-labneh-croissant.jpg" alt="Zaatar & Labneh Croissant" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1\'><rect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'/><circle cx=\'8.5\' cy=\'8.5\' r=\'1.5\'/><path d=\'M21 15l-5-5L5 21\'/></svg>ADD IMAGE</div>'"></div>
+      <div class="menu-item-body"><div class="item-info"><h4>Zaatar & Labneh Croissant</h4><p>Zaatar croissant with creamy labneh filling</p></div><div class="item-price">AED 22</div></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <p class="section-label reveal">Why Guests Return</p>
+  <h2 class="section-title reveal reveal-d1">The <em>Mayar</em> Experience</h2>
+  <div class="exp-grid">
+    <div class="exp-card reveal reveal-d1"><div class="exp-icon">🌿</div><h3>SERENE ATMOSPHERE</h3><p>Clean, quiet, and elegantly designed — a space that invites you to slow down, breathe, and simply be.</p></div>
+    <div class="exp-card reveal reveal-d2"><div class="exp-icon">☕</div><h3>CRAFT COFFEE</h3><p>Sourced with care, brewed with precision. Every cup is a small ritual worth savouring.</p></div>
+    <div class="exp-card reveal reveal-d3"><div class="exp-icon">🤲</div><h3>HEARTFELT SERVICE</h3><p>Our team is celebrated for their warmth and attentiveness. You're not just a customer — you're a guest.</p></div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <p class="section-label reveal">What Guests Say</p>
+  <h2 class="section-title reveal reveal-d1">Stories from our <em>community</em></h2>
+  <div class="menu-tabs reveal" style="margin-top:3rem;">
+    <button class="tab active" data-rtab="all">All</button>
+    <button class="tab" data-rtab="food">Food</button>
+    <button class="tab" data-rtab="coffee">Coffee</button>
+    <button class="tab" data-rtab="service">Service</button>
+    <button class="tab" data-rtab="vibes">Vibes</button>
+  </div>
+  <div class="review-track" id="review-grid">
+    <div class="review-card reveal reveal-d1" data-tags="service vibes"><div class="review-stars">★★★★★</div><p class="review-text">"The team at Mayar Café stands out for their kindness, cooperation, and respect. Their elegant manner creates a beautiful and comfortable atmosphere. The quick response in taking orders reflects their professionalism."</p><div class="review-author">A M</div><div class="review-date">3 months ago</div></div>
+    <div class="review-card reveal reveal-d2" data-tags="food vibes"><div class="review-stars">★★★★★</div><p class="review-text">"Such a lovely experience. The café had the perfect cozy atmosphere, elegant vibes, and truly exceptional service. The sweets — absolutely divine, rich in flavour and beautifully presented. A must-visit."</p><div class="review-author">Pari</div><div class="review-date">8 months ago</div></div>
+    <div class="review-card reveal reveal-d3" data-tags="vibes service"><div class="review-stars">★★★★★</div><p class="review-text">"Café Mayar is truly a wonderful place that offers a warm and welcoming atmosphere. From the moment you walk in, you feel comfortable and relaxed. Everything reflects care."</p><div class="review-author">رابعة الحمادي</div><div class="review-date">2 months ago</div></div>
+    <div class="review-card reveal reveal-d1" data-tags="food coffee"><div class="review-stars">★★★★★</div><p class="review-text">"Amazing place to enjoy coffee and treat yourself to something sweet. I tried their honey cake — absolutely delicious! Soft, rich, and perfectly made."</p><div class="review-author">Anna Drachova</div><div class="review-date">11 months ago</div></div>
+    <div class="review-card reveal reveal-d2" data-tags="coffee food"><div class="review-stars">★★★★★</div><p class="review-text">"The Midnight Crunch for Ramadan was really good, I really wish they'd keep it all year. And the Ethiopian iced V60 is a must. Definitely coming back."</p><div class="review-author">Khalifa Essa</div><div class="review-date">3 months ago</div></div>
+    <div class="review-card reveal reveal-d3" data-tags="food coffee vibes"><div class="review-stars">★★★★★</div><p class="review-text">"Everything I have tried is super delicious. Loved the pistachio latte, Saffron Cake, Sticky Dates. The ambiance is so peaceful. Perfect time being here. 10/10."</p><div class="review-author">Shanza Naveed</div><div class="review-date">5 months ago</div></div>
+    <div class="review-card reveal reveal-d1" data-tags="coffee service"><div class="review-stars">★★★★★</div><p class="review-text">"My brother and I always stop by Mayar every morning before school for their coffee. Ali the barista never fails to make the perfect cup. Honestly my day isn't complete without Mayar's coffee."</p><div class="review-author">Maryam Rashid</div><div class="review-date">11 months ago</div></div>
+    <div class="review-card reveal reveal-d2" data-tags="service food"><div class="review-stars">★★★★★</div><p class="review-text">"Amazing café! The coffee is delicious, the service is excellent, and all the food is absolutely tasty and well-prepared. Special thanks to Rose — super friendly and professional."</p><div class="review-author">Amal Mohamed</div><div class="review-date">3 months ago</div></div>
+    <div class="review-card reveal reveal-d3" data-tags="vibes coffee"><div class="review-stars">★★★★★</div><p class="review-text">"I've been visiting this cozy café every weekend — it's become my go-to spot. Their hibiscus tea is absolutely refreshing, the iced latte perfectly balanced, and their upside-down cheesecake? An absolute triumph."</p><div class="review-author">Noorah UAQ</div><div class="review-date">A year ago</div></div>
+    <div class="review-card reveal reveal-d1" data-tags="food vibes"><div class="review-stars">★★★★★</div><p class="review-text">"I went for a me-time and I loved it there — the music and the calming atmosphere. I had the best French toast ever. The staff are so friendly, laughing and smiling all the time."</p><div class="review-author">Fatmah Al Ali</div><div class="review-date">A year ago</div></div>
+    <div class="review-card reveal reveal-d2" data-tags="vibes service"><div class="review-stars">★★★★★</div><p class="review-text">"There's something truly special about this coffee shop that keeps drawing me back. From the moment you walk in, you're greeted with a warm, inviting atmosphere — the kind that makes you want to stay awhile."</p><div class="review-author">Izea Baylon</div><div class="review-date">A month ago</div></div>
+    <div class="review-card reveal reveal-d3" data-tags="food coffee vibes"><div class="review-stars">★★★★★</div><p class="review-text">"A beautiful and elegant café, perfect for breakfast. The outdoor seating is lovely, especially in winter. Indoor seating offers great privacy for families."</p><div class="review-author">Mk M</div><div class="review-date">7 months ago</div></div>
+    <div class="review-card reveal reveal-d1" data-tags="coffee food"><div class="review-stars">★★★★★</div><p class="review-text">"A distinctive coffee shop in Umm Al Quwain. Their breakfast menu is excellent. I ordered the V60 Ethiopian and Vanilla Blend — both exceptional. A truly great find."</p><div class="review-author">Saif Alali</div><div class="review-date">11 months ago</div></div>
+    <div class="review-card reveal reveal-d2" data-tags="food service"><div class="review-stars">★★★★★</div><p class="review-text">"One of the best egg Benedicts I've ever tasted. Very nice place for brunch. The quality is outstanding and the presentation is beautiful."</p><div class="review-author">Mei Mei</div><div class="review-date">A year ago</div></div>
+    <div class="review-card reveal reveal-d3" data-tags="vibes coffee"><div class="review-stars">★★★★★</div><p class="review-text">"I visited Umm Al Quwain twice and every time I have to sit here. It's the only café that I feel truly suits me in terms of atmosphere. Clean, tidy, and elegant — it deserves every star."</p><div class="review-author">Ouarda Warda</div><div class="review-date">7 months ago</div></div>
+    <div class="review-card reveal reveal-d1" data-tags="coffee service vibes"><div class="review-stars">★★★★★</div><p class="review-text">"The café is special, and their best thing is the Spanish latte. The service is fast, and all the staff have positive energy. The best coffee is made by Romeo to start your day."</p><div class="review-author">Heyam</div><div class="review-date">A year ago</div></div>
+    <div class="review-card reveal reveal-d2" data-tags="coffee food"><div class="review-stars">★★★★★</div><p class="review-text">"I recommend the V60 — they have all kinds, especially the Brazilian one, which they make perfectly. Also try the San Sebastian, Red Velvet, and Pistachio Cake. Three of the best cakes I've tried."</p><div class="review-author">سالم المنصوري</div><div class="review-date">A year ago</div></div>
+    <div class="review-card reveal reveal-d3" data-tags="coffee vibes"><div class="review-stars">★★★★★</div><p class="review-text">"I've tried matcha from everywhere, but theirs is different. Matcha Blend is truly something special."</p><div class="review-author">Zahra107 LDN</div><div class="review-date">A year ago</div></div>
+    <div class="review-card reveal reveal-d1" data-tags="food vibes coffee"><div class="review-stars">★★★★★</div><p class="review-text">"The coffee is so good! I've gotten their iced matcha more than once, and it's still the best thing I've ever had. My best coffee shop."</p><div class="review-author">Nona J</div><div class="review-date">A year ago</div></div>
+    <div class="review-card reveal reveal-d2" data-tags="service vibes"><div class="review-stars">★★★★★</div><p class="review-text">"Love the place and customer service. The ambience is amazing and the staff are really nice — one of them even offered me a charger! Thank you Sabrina."</p><div class="review-author">Klien</div><div class="review-date">A month ago</div></div>
+  </div>
+
+  <div id="expandReviews" style="display:flex; align-items:center; justify-content:center; gap:1rem; margin-top:2.5rem; cursor:pointer;">
+    <div class="expand-circle"><span class="btn-icon">+</span></div>
+    <span class="btn-label" style="font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.25em; color:var(--gold-lt);">More Reviews</span>
+  </div>
+
+  <div class="rating-badge reveal">
+    <div class="rating-big">4.7</div>
+    <div class="rating-stars">★★★★★</div>
+    <div class="rating-count">328 REVIEWS ON GOOGLE MAPS</div>
+  </div>
+</section>
+
+<!-- VISIT -->
+<section id="visit">
+  <p class="section-label reveal">Come Find Us</p>
+  <h2 class="section-title reveal reveal-d1">We're <em>open</em> for you</h2>
+  <div class="visit-inner">
+    <div class="info-block reveal reveal-d1">
+      <h3>HOURS</h3>
+      <table class="hours-table">
+        <tr><td>Saturday – Thursday</td><td>9:00 AM – 11:45 PM</td></tr>
+        <tr><td>Friday</td><td>2:00 PM – 11:45 PM</td></tr>
+      </table>
+      <br/>
+      <h3>SERVICES</h3>
+      <p>Dine-In &nbsp;·&nbsp; Drive-Through<br>No-Contact Delivery &nbsp;·&nbsp; Order Online</p>
+    </div>
+    <div class="info-block reveal reveal-d2">
+      <h3>LOCATION</h3>
+      <p>GH3X+PVF<br>Al Salmah – Al Qraun 1<br>Emirate of Umm Al Quwain<br>United Arab Emirates</p>
+      <br/>
+      <h3>CONTACT</h3>
+      <p><a href="tel:+971 502744205">050 274 4205</a></p>
+      <br/>
+      <h3>ORDER ONLINE</h3>
+      <p style="margin-top:.8rem;display:flex;flex-direction:column;gap:.7rem;">
+        <a href="https://www.talabat.com/uae/restaurant/771597/mayar-cafe-al-qarain?aid=10177" target="_blank" style="color:var(--gold-lt);font-family:'Cinzel',serif;font-size:.82rem;letter-spacing:.18em;text-decoration:none;border-bottom:1px solid rgba(212,185,106,.3);padding-bottom:.18rem;transition:color .3s,border-color .3s;">Order on Talabat ↗</a>
+        <a href="https://drivu.co/DriveThru/Mayar_Cafe_DRA6A/Umm_Al_Quwain?utm_source=ig&utm_medium=social&utm_content=link_in_bio" target="_blank" style="color:var(--gold-lt);font-family:'Cinzel',serif;font-size:.82rem;letter-spacing:.18em;text-decoration:none;border-bottom:1px solid rgba(212,185,106,.3);padding-bottom:.18rem;transition:color .3s,border-color .3s;">Drive-Thru via Drivu ↗</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-inner">
+    <div class="gold-divider" style="margin-bottom:3rem;"><div class="gold-diamond"></div></div>
+    <h2 class="cta-title reveal">Your next great cup<br>awaits at <em>Mayar</em></h2>
+    <p class="cta-sub reveal reveal-d1">Come as a stranger. Leave as a regular.</p>
+    <div class="hero-cta-row reveal reveal-d2">
+      <a href="tel:0502744205" class="btn-primary">Call to Reserve</a>
+      <a href="https://maps.google.com/?q=Mayar+Café+Umm+Al+Quwain" target="_blank" class="btn-ghost">Get Directions</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-logo"><img src="" alt="Mayar Café">MAYAR CAFÉ <span>كافيه ميار</span></div>
+    <nav class="footer-links">
+      <a href="#about">Story</a>
+      <a href="#menu">Menu</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#visit">Visit</a>
+    </nav>
+    <div class="footer-social">
+      <a href="https://www.instagram.com/mayarcafe.uae/" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+        </svg>
+        @mayarcafe.uae
+      </a>
+      <a href="https://www.tiktok.com/@mayarcafe.uae" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/>
+        </svg>
+        @mayarcafe.uae
+      </a>
+      <a href="https://api.whatsapp.com/send/?phone=971502744205&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+        </svg>
+        WhatsApp
+      </a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 Mayar Café — Umm Al Quwain, UAE</div>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60));
+
+  // Menu tabs
+  document.querySelectorAll('.tab[data-tab]').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab[data-tab]').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Review filter
+  const INITIAL_SHOW = 5;
+  let expanded = false;
+  function applyReviewFilter(filter) {
+    const allCards = Array.from(document.querySelectorAll('#review-grid .review-card'));
+    const matching = allCards.filter(c => filter === 'all' || c.dataset.tags.includes(filter));
+    const hidden = allCards.filter(c => filter !== 'all' && !c.dataset.tags.includes(filter));
+    hidden.forEach(c => c.style.display = 'none');
+    matching.forEach((c, i) => { c.style.display = (!expanded && i >= INITIAL_SHOW) ? 'none' : ''; });
+    const btn = document.getElementById('expandReviews');
+    if (matching.length <= INITIAL_SHOW) { btn.style.display = 'none'; }
+    else {
+      btn.style.display = 'flex';
+      const remaining = matching.length - INITIAL_SHOW;
+      btn.querySelector('.btn-label').textContent = expanded ? 'Show Less' : `+${remaining} More Reviews`;
+      btn.querySelector('.btn-icon').textContent = expanded ? '−' : '+';
+    }
+  }
+  document.querySelectorAll('.tab[data-rtab]').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab[data-rtab]').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      expanded = false;
+      applyReviewFilter(tab.dataset.rtab);
+    });
+  });
+  document.getElementById('expandReviews').addEventListener('click', () => {
+    expanded = !expanded;
+    const activeFilter = document.querySelector('.tab[data-rtab].active').dataset.rtab;
+    applyReviewFilter(activeFilter);
+    if (!expanded) document.getElementById('review-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  applyReviewFilter('all');
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
